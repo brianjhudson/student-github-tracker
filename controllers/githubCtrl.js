@@ -36,6 +36,8 @@ function checkUserEvents(studentId, username) {
 }
 
 function updateDatabase(commit) {
+    const username = commit.username
+    delete commit.username
     return knex('student_project').where({
         project_url: commit.project_url 
     })
@@ -47,7 +49,7 @@ function updateDatabase(commit) {
             return knex('student_project')
             .insert(commit)
             .then(results => {
-                exec('cd ' + path + '&& git clone ' + url, (err, stderr, stdout) => {
+                exec('cd ' + path + ' && git clone ' + url, (err, stderr, stdout) => {
                     console.log("Error: ", err)
                     console.log("St Err: ", stderr)
                     console.log("St Out: ", stdout)
