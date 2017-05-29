@@ -36,13 +36,13 @@ function checkUserEvents(studentId, username) {
 }
 
 function updateDatabase(commit) {
-    const username = commit.username
+    const username = commit.username.toLowerCase()
     delete commit.username
     return knex('student_project').where({
         project_url: commit.project_url 
     })
     .then(result => {
-        const path = process.env.BASE_PATH + commit.username
+        const path = process.env.BASE_PATH + username
         const url = commit.project_url.replace('api.github.com/repos', 'github.com')
 
         if (!result.length) {
