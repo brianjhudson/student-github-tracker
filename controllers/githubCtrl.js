@@ -5,11 +5,42 @@ const exec = require('child_process').exec;
 
 
 module.exports = {
-    checkUserEventsByUsername: checkUserEvents,
-    checkEventsForAllUsers
+    checkEvents
 }
 
-function checkUserEvents(studentId, username) {
+function checkEvents() {
+    if (process.env.MENTEES_ONLY === 'false') {
+        checkEventsForAllUsers()
+    } else {
+        checkEventsForMentees()
+    }
+}
+
+function checkEventsForAllUsers() {
+    knex('student')
+    .select('id', 'github_account_name')
+    .map(result => 
+        fetchGithubEvents(result.id, result.github_account_name)
+        .then(results => results.map(commit => {
+            updateDatabase(commit)
+        }))
+    )
+}
+
+function checkEventsForMentees() {
+   knex('student')
+   .join('mentor', 'mentor.id', '=', 'student.mentor_id')
+   .where({'mentor.github_account_name': process.env.GITHUB_ACCOUNT_NAME})
+   .select('student.id', 'student.github_account_name')
+    .map(result => 
+        fetchGithubEvents(result.id, result.github_account_name)
+        .then(results => results.map(commit => {
+            updateDatabase(commit)
+        }))
+    )
+}
+
+function fetchGithubEvents(studentId, username) {
     return axios.get(`https://api.github.com/users/${username}/events`, {
         headers: {'Authorization': `token ${process.env.GITHUB_TOKEN}`, 'User-Agent': process.env.GITHUB_ACCOUNT_NAME}
     })
@@ -72,15 +103,4 @@ function updateDatabase(commit) {
 
         }
     })
-}
-
-function checkEventsForAllUsers() {
-    knex('student')
-    .select('id', 'github_account_name')
-    .map(result => 
-        checkUserEvents(result.id, result.github_account_name)
-        .then(results => results.map(commit => {
-            updateDatabase(commit)
-        }))
-    )
 }

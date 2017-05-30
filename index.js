@@ -17,7 +17,7 @@ app.use(session({
     saveUninitialized: false 
 }))
 
-githubCtrl.checkEventsForAllUsers()
+githubCtrl.checkEvents()
 
 app.listen(app.get('port'), () => {
     console.log(`Listening on port ${app.get('port')}`)
