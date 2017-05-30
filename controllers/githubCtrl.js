@@ -87,7 +87,7 @@ function updateDatabase(commit) {
                     } else {
                         console.log(username, ": ", stdout)
                         if (process.env.SLACK_NOTIFICATIONS === "true") {
-                            axios.post(process.env.SLACK_CHANNEL_URL, {text: "New Repo for " + username + "\nat " + path})
+                            axios.post(process.env.SLACK_CHANNEL_URL, {text: "New Repo for " + username + "\nRepo: <" + commit.project_url + "> \nDirectory: " + path})
                         }
                     }
                 })
@@ -105,13 +105,13 @@ function updateDatabase(commit) {
                     } else {
                         console.log(username, ": ", stdout)
                         if (process.env.SLACK_NOTIFICATIONS === "true") {
-                            axios.post(process.env.SLACK_CHANNEL_URL, {text: "New commit for " + username + "\nat " + path})
+                            axios.post(process.env.SLACK_CHANNEL_URL, {text: "New event for " + username + "\nRepo: <" + commit.project_url + "> \nDirectory: " + path})
                         }
                     }
                 })                
             })
         } else {
-            console.log(username, ": ", "No updates at ", path)
+            console.log("No updates for", commit.project_name)
         }
     })
 }
