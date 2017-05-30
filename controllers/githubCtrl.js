@@ -81,26 +81,37 @@ function updateDatabase(commit) {
             .insert(commit)
             .then(results => {
                 exec('cd ' + path + ' && git clone ' + url, (err, stderr, stdout) => {
-                    console.log("Error: ", err)
-                    console.log("St Err: ", stderr)
-                    console.log("St Out: ", stdout)
+                    if (err || stderr) {
+                        console.log("Error: ", err)
+                        console.log("St Err: ", stderr)
+                    } else {
+                        console.log(username, ": ", stdout)
+                        if (process.env.SLACK_NOTIFICATIONS === "true") {
+                            axios.post(process.env.SLACK_CHANNEL_URL, {text: "New Repo for " + username + "\nat " + path})
+                        }
+                    }
                 })
             })
         } else if (result[0].last_commit_date < commit.last_commit_date) {
             path += '/' + commit.project_name
-            console.log(result)
             return knex('student_project')
             .update({last_commit_date: commit.last_commit_date})
             .where({project_url: commit.project_url})
             .then(results => {
                 exec('cd ' + path + '&& git pull', (err, stderr, stdout) => {
-                    console.log("Error: ", err)
-                    console.log("St Err: ", stderr)
-                    console.log("St Out: ", stdout)
+                    if (err || stderr) {
+                        console.log("Error: ", err)
+                        console.log("St Err: ", stderr)
+                    } else {
+                        console.log(username, ": ", stdout)
+                        if (process.env.SLACK_NOTIFICATIONS === "true") {
+                            axios.post(process.env.SLACK_CHANNEL_URL, {text: "New commit for " + username + "\nat " + path})
+                        }
+                    }
                 })                
             })
         } else {
-
+            console.log(username, ": ", "No updates at ", path)
         }
     })
 }

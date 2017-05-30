@@ -21,7 +21,7 @@ function createDirectories(results) {
             console.log(err)
             console.log(stdErr)
          } else {
-            console.log("STD OUT: ", stdOut)
+            console.log('Directory Created')
          }
       })
    }

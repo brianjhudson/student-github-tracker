@@ -19,6 +19,10 @@ app.use(session({
 
 githubCtrl.checkEvents()
 
+CronJob('* */10 * * * 1-5', () => {
+    githubCtrl.checkEvents()
+})
+
 app.listen(app.get('port'), () => {
     console.log(`Listening on port ${app.get('port')}`)
 })
