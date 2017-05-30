@@ -2,7 +2,7 @@
 
 This server allows you to track student github accounts without manually looking up, cloning, or pulling their repos. Every time a student creates a repo or pushes a commit (or performs any event really), the tracker will catch the event, update the log in the database, clone or pull the repo, and send you a slack notification. 
 
-Note: For now, the commands executed through the child process are intended for Macs only. See [note on PCs](#user-content-PCs?) below.
+Note: For now, the commands executed through the child process are intended for Macs only. See [note on PCs](#user-content-PCs) below.
 
 ## .env
 Create a `.env` file, following the format of the `.env-sample` file. You will need a session secret and several other environment variables to get this server working. 
@@ -51,5 +51,5 @@ The server at `index.js` is set up to run immediately, so you might receive a lo
 ## Cron job
 If you leave it running, the server should check github every ten minutes for updates and send you slack notifications if it finds any. I didn't want to check too frequently, but feel free to adjust this value on the cron job in `index.js`. 
 
-## PCs? 
+## PCs
 Okay, I only use this on my Mac, and I am certain that the `&&` command is going to break on my PC, but I haven't had time to look into that. I'm also not sure about the file paths. I need to get to this. In the meantime, PC users, you might just shut down the `exec()` command and just rely on the slack notifications.
