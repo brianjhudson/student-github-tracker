@@ -2,7 +2,7 @@
 
 This server allows you to track student github accounts without manually looking up, cloning, or pulling their repos. Every time a student creates a repo or pushes a commit (or performs any event really), the tracker will catch the event, update the log in the database, clone or pull the repo, and send you a slack notification. 
 
-Note: For now, the commands executed through the child process are intended for Macs only. See [note on PCs](#user-content-PCs) below.
+Note: For now, the commands executed through the child process are intended for Macs only. See [note on PCs](#user-content-pcs) below.
 
 ## .env
 Create a `.env` file, following the format of the `.env-sample` file. You will need a session secret and several other environment variables to get this server working. 
