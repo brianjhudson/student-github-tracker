@@ -3,7 +3,10 @@ const knex = require('../knex')
 const exec = require('child_process').exec
 
 if (process.env.MENTEES_ONLY === 'true') {
-   knex('student').join('mentor', 'mentor.id', '=', 'student.mentor_id').where({'mentor.github_account_name': process.env.GITHUB_ACCOUNT_NAME}).select('student.github_account_name')
+   knex('student')
+   .join('mentor', 'mentor.id', '=', 'student.mentor_id')
+   .where({'mentor.github_account_name': process.env.GITHUB_ACCOUNT_NAME})
+   .select('student.github_account_name')
    .then(results => {
       createDirectories(results)
    })
