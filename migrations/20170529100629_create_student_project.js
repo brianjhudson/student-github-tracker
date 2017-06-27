@@ -5,7 +5,7 @@ exports.up = function(knex, Promise) {
       table.integer('student_id').unsigned()
       table.string('project_name')
       table.string('project_url')
-      table.string('last_commit')
+      table.dateTime('first_commit_date')
       table.dateTime('last_commit_date')
       table.timestamps()
       table.unique('project_url')
