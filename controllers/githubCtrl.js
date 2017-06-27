@@ -61,8 +61,7 @@ function fetchGithubEvents(studentId, username) {
         student_id: studentId,
         project_name: result.repo.name,
         project_url: result.repo.url,
-        last_commit: result.id,
-        last_commit_date: result.created_at
+        commit_date: result.created_at
     })))
 }
 
@@ -77,6 +76,8 @@ function updateDatabase(commit) {
         const url = commit.project_url.replace('api.github.com/repos', 'github.com')
 
         if (!result.length) {
+            commit.first_commit_date = commit.commit_date;
+            delete commit.commit_date
             return knex('student_project')
             .insert(commit)
             .then(results => {
@@ -95,7 +96,7 @@ function updateDatabase(commit) {
         } else if (result[0].last_commit_date < commit.last_commit_date) {
             path += '/' + commit.project_name
             return knex('student_project')
-            .update({last_commit_date: commit.last_commit_date})
+            .update({last_commit_date: commit.commit_date})
             .where({project_url: commit.project_url})
             .then(results => {
                 exec('cd ' + path + '&& git pull', (err, stderr, stdout) => {
